@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "tVecor.h"
+#include "enemy.h"
 #include <iostream>
 #include <ctime>
 
@@ -14,26 +15,34 @@ int main()
 
 	SetTargetFPS(60);
 
-	tVector<int> v;
+	tVector<enemy*> original;
 
 	while (!WindowShouldClose())    
 	{
 		BeginDrawing();
 
-		ClearBackground(RAYWHITE);
+		Vector2 cursor = GetMousePosition();
 
 		if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-		{
-			v.push_back(rand() % 10);
-
-			for (size_t i = 0; i < v.size(); ++i)
-			{
-				v.at(i);
-			}
-			v.capacity();
-			v.size();
-			std::cout << "\n" << std::endl;
+		{	
+			original.push_back(new enemy("big_zombie_idle_anim_f3.png"));
+			original[original.size() - 1]->pos = cursor;
+			original[original.size() - 1]->velocity.x = rand() % 8 + -4;
+			original[original.size() - 1]->velocity.y = rand() % 8 + -4;
 		}
+
+		for (int i = 0; i < original.size(); i++)
+		{
+			original[i]->update();
+		}
+
+		ClearBackground(RAYWHITE);
+
+		for (int i = 0; i < original.size(); i++)
+		{
+			original[i]->draw();
+		}
+
 		EndDrawing();
 	}
 	CloseWindow(); 
